@@ -50,6 +50,8 @@ class DashboardViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = "مركز الدكتور حسام عبدالكريم القدسي"
+
         self.person = Person(name: "John Doe", age: 28, biologicalSex: "Male", wheelCharUse: false, fitzpatrickSkinType: ("III", .red), bloodYpe: "A+")
         self.requestData()
     }
