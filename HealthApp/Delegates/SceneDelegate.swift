@@ -16,17 +16,29 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private var savedURL: URL?
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        guard let windowScene = (scene as? UIWindowScene) else { return }
-        let storyboard = UIStoryboard(name: Constants.Storyboard.main, bundle: nil)
+    // التأكد من أن المشهد هو UIWindowScene
+    guard let windowScene = (scene as? UIWindowScene) else { return }
+    
+    let window = UIWindow(windowScene: windowScene)
+    
+    do {
+        // 1. إعداد قاعدة البيانات (المريض والعمليات)
+        let container = try ModelContainer(for: Patient.self, OperativeNote.self)
         
-        if let initialViewController = storyboard.instantiateInitialViewController() {
-            window = UIWindow(windowScene: windowScene)
-            window?.rootViewController = initialViewController
-            window?.makeKeyAndVisible()
-        }
+        // 2. إنشاء الواجهة وربطها بالبيانات
+        let contentView = PatientList()
+            .modelContainer(container)
         
-        guard let urlContext = connectionOptions.urlContexts.first else { return }
-        self.savedURL = urlContext.url
+        // 3. عرض الواجهة على الشاشة
+        window.rootViewController = UIHostingController(rootView: contentView)
+        self.window = window
+        window.makeKeyAndVisible()
+        
+    } catch {
+        print("فشل في إنشاء قاعدة البيانات: \(error)")
+    }
+}
+
         
     }
     
